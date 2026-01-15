@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client - Camera Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1><i class="fas fa-mobile-alt"></i> Client Camera Controller</h1>
+            
+            <div id="joinRoomSection">
+                <p>Masukkan kode room dari host:</p>
+                <div class="input-group">
+                    <input type="text" id="roomCodeInput" placeholder="Contoh: ABC123" maxlength="6">
+                </div>
+                <button id="joinRoomBtn" class="btn">
+                    <i class="fas fa-sign-in-alt"></i> Gabung Room
+                </button>
+            </div>
+            
+            <div id="clientConnectedSection" class="hidden">
+                <h2>Terhubung ke Room!</h2>
+                <div class="room-code" id="connectedRoomCode"></div>
+                
+                <div class="status connected" id="clientStatus">
+                    Terhubung sebagai client. Host dapat mengontrol kamera Anda.
+                </div>
+                
+                <div class="video-container">
+                    <video id="cameraFeed" autoplay playsinline></video>
+                </div>
+                
+                <div class="controls">
+                    <button id="clientToggleCameraBtn" class="control-btn">
+                        <i class="fas fa-video"></i> Kamera Aktif
+                    </button>
+                    
+                    <div class="zoom-slider">
+                        <label><i class="fas fa-search"></i> Zoom Level: <span id="clientZoomValue">1x</span></label>
+                        <input type="range" id="clientZoomSlider" min="1" max="5" step="0.1" value="1" disabled>
+                    </div>
+                </div>
+                
+                <p class="instructions">Host sedang mengontrol kamera Anda. Anda tidak dapat mengubah pengaturan kamera secara manual.</p>
+            </div>
+            
+            <div class="instructions">
+                <h3>Instruksi Client:</h3>
+                <ul>
+                    <li>Masukkan kode room yang diberikan oleh host</li>
+                    <li>Izinkan akses kamera saat diminta</li>
+                    <li>Host akan dapat mengontrol kamera Anda (zoom, senter, dll)</li>
+                    <li>Anda tidak perlu melakukan apa-apa setelah terhubung</li>
+                </ul>
+            </div>
+            
+            <a href="/" class="btn btn-danger">
+                <i class="fas fa-home"></i> Kembali ke Menu Utama
+            </a>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
