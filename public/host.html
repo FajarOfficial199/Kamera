@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host - Camera Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1><i class="fas fa-video"></i> Host Camera Controller</h1>
+            
+            <div id="createRoomSection">
+                <p>Klik tombol di bawah untuk membuat room baru</p>
+                <button id="createRoomBtn" class="btn">
+                    <i class="fas fa-plus-circle"></i> Buat Room Baru
+                </button>
+            </div>
+            
+            <div id="roomCreatedSection" class="hidden">
+                <h2>Room Berhasil Dibuat!</h2>
+                <p>Bagikan kode ini ke client:</p>
+                <div class="room-code" id="roomCodeDisplay">ABCDEF</div>
+                
+                <div class="status" id="connectionStatus">
+                    Menunggu koneksi client...
+                </div>
+                
+                <div class="clients-list">
+                    <h3>Client Terhubung:</h3>
+                    <div id="clientsContainer"></div>
+                </div>
+                
+                <div id="controlsSection" class="hidden">
+                    <div class="video-container">
+                        <img id="videoFeed" src="" alt="Video Feed from Client">
+                    </div>
+                    
+                    <div class="controls">
+                        <button id="toggleCameraBtn" class="control-btn">
+                            <i class="fas fa-video"></i> Hidupkan Kamera
+                        </button>
+                        
+                        <button id="flashlightBtn" class="control-btn">
+                            <i class="fas fa-lightbulb"></i> Senter: MATI
+                        </button>
+                        
+                        <div class="zoom-slider">
+                            <label for="zoomSlider"><i class="fas fa-search"></i> Zoom: <span id="zoomValue">1x</span></label>
+                            <input type="range" id="zoomSlider" min="1" max="5" step="0.1" value="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>Instruksi Host:</h3>
+                <ul>
+                    <li>Bagikan kode room ke client yang ingin Anda kendalikan kameranya</li>
+                    <li>Tunggu hingga client terhubung</li>
+                    <li>Setelah client terhubung, Anda dapat mengontrol kamera mereka</li>
+                    <li>Gunakan slider untuk zoom in/out</li>
+                    <li>Tombol senter untuk menyalakan lampu flash</li>
+                </ul>
+            </div>
+            
+            <a href="/" class="btn btn-danger">
+                <i class="fas fa-home"></i> Kembali ke Menu Utama
+            </a>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
