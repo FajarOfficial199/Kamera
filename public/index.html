@@ -3,35 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Controller</title>
+    <title>Camera Controller Pro</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1><i class="fas fa-camera"></i> Camera Controller</h1>
-            <p>Kontrol kamera dari jarak jauh dengan sistem room code</p>
+            <div class="text-center">
+                <div class="mb-20">
+                    <i class="fas fa-camera fa-4x" style="background: linear-gradient(135deg, #6366f1, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h1>Camera Controller Pro</h1>
+                <p class="subtitle">Kontrol kamera dari jarak jauh dengan sistem room code. Host dapat mengontrol zoom, flash, dan mengambil screenshot dari client.</p>
+            </div>
             
-            <div class="options">
+            <div class="flex-center gap-20 mt-20">
                 <a href="/host" class="btn">
-                    <i class="fas fa-video"></i> Buat Room (Host)
+                    <i class="fas fa-video"></i>
+                    <span>Buat Room (Host)</span>
                 </a>
                 <a href="/client" class="btn btn-secondary">
-                    <i class="fas fa-mobile-alt"></i> Gabung Room (Client)
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Gabung Room (Client)</span>
                 </a>
             </div>
             
-            <div class="instructions">
-                <h3>Cara Penggunaan:</h3>
+            <div class="instructions mt-20">
+                <h3><i class="fas fa-info-circle"></i> Cara Menggunakan</h3>
                 <ul>
-                    <li><strong>Host:</strong> Buat room baru, dapatkan kode, dan bagikan kode ke client</li>
-                    <li><strong>Client:</strong> Masukkan kode room yang diberikan oleh host</li>
-                    <li>Host dapat mengontrol kamera client (zoom, senter, dll)</li>
-                    <li>Client memberikan akses kamera untuk dapat dikontrol</li>
+                    <li><strong>Host:</strong> Buat room baru dan bagikan kode room ke client</li>
+                    <li><strong>Client:</strong> Masukkan kode room yang diberikan host</li>
+                    <li><strong>Izin Kamera:</strong> Client harus memberikan izin akses kamera</li>
+                    <li><strong>Kontrol:</strong> Host dapat mengontrol zoom, flash, dan mengambil screenshot</li>
+                    <li><strong>Multi-Client:</strong> Satu room dapat memiliki beberapa client</li>
                 </ul>
+            </div>
+            
+            <div class="text-center mt-20">
+                <div class="flex-center gap-10">
+                    <div class="feature-tag">
+                        <i class="fas fa-search"></i> Zoom Control
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-lightbulb"></i> Flash Control
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-camera-retro"></i> Screenshot
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-users"></i> Multi-Client
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="main.js"></script>
+    <style>
+        .feature-tag {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #bfdbfe;
+        }
+    </style>
 </body>
 </html>
