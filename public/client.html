@@ -3,68 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client - Camera Controller</title>
+    <title>Client - Camera Controller Pro</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1><i class="fas fa-mobile-alt"></i> Client Camera Controller</h1>
-            
-            <div id="joinRoomSection">
-                <p>Masukkan kode room dari host:</p>
-                <div class="input-group">
-                    <input type="text" id="roomCodeInput" placeholder="Contoh: ABC123" maxlength="6">
+            <div class="flex-between">
+                <div>
+                    <h1><i class="fas fa-mobile-alt"></i> Client Mode</h1>
+                    <p class="subtitle">Izinkan host untuk mengontrol kamera Anda</p>
                 </div>
-                <button id="joinRoomBtn" class="btn">
-                    <i class="fas fa-sign-in-alt"></i> Gabung Room
-                </button>
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Beranda
+                </a>
             </div>
             
-            <div id="clientConnectedSection" class="hidden">
-                <h2>Terhubung ke Room!</h2>
-                <div class="room-code" id="connectedRoomCode"></div>
-                
-                <div class="status connected" id="clientStatus">
-                    Terhubung sebagai client. Host dapat mengontrol kamera Anda.
-                </div>
-                
-                <div class="video-container">
-                    <video id="cameraFeed" autoplay playsinline></video>
-                </div>
-                
-                <div class="controls">
-                    <button id="clientToggleCameraBtn" class="control-btn">
-                        <i class="fas fa-video"></i> Kamera Aktif
-                    </button>
+            <!-- Step 1: Join Room -->
+            <div id="joinRoomSection">
+                <div class="text-center">
+                    <div class="permission-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h2>Gabung ke Room</h2>
+                    <p class="permission-text">Masukkan kode room yang diberikan oleh host</p>
                     
-                    <div class="zoom-slider">
-                        <label><i class="fas fa-search"></i> Zoom Level: <span id="clientZoomValue">1x</span></label>
-                        <input type="range" id="clientZoomSlider" min="1" max="5" step="0.1" value="1" disabled>
+                    <div class="input-group">
+                        <div class="input-with-icon">
+                            <i class="fas fa-hashtag"></i>
+                            <input type="text" id="roomCodeInput" placeholder="Masukkan 6 digit kode (contoh: ABC123)" maxlength="6" autocomplete="off">
+                        </div>
+                    </div>
+                    
+                    <div class="flex-center gap-10">
+                        <button id="joinRoomBtn" class="btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Gabung Room</span>
+                        </button>
+                        <button id="scanQRBtn" class="btn btn-outline">
+                            <i class="fas fa-qrcode"></i>
+                            <span>Scan QR</span>
+                        </button>
+                    </div>
+                    
+                    <div id="roomStatus" class="status hidden">
+                        <!-- Status will appear here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Permission Request -->
+            <div id="permissionSection" class="hidden">
+                <div class="text-center">
+                    <div class="permission-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h2>Izin Akses Kamera</h2>
+                    <p class="permission-text">Untuk dapat dikontrol oleh host, izinkan akses kamera Anda</p>
+                    
+                    <div class="permission-buttons">
+                        <button id="allowCameraBtn" class="btn">
+                            <i class="fas fa-check"></i>
+                            <span>Izinkan Kamera</span>
+                        </button>
+                        <button id="cancelJoinBtn" class="btn btn-outline">
+                            <i class="fas fa-times"></i>
+                            <span>Batalkan</span>
+                        </button>
+                    </div>
+                    
+                    <div class="instructions mt-20">
+                        <ul>
+                            <li>Host dapat mengontrol zoom dan flash kamera Anda</li>
+                            <li>Host dapat mengambil screenshot</li>
+                            <li>Anda dapat mematikan kamera kapan saja</li>
+                            <li>Data hanya dikirim ke host room ini</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Connected -->
+            <div id="connectedSection" class="hidden">
+                <div class="text-center">
+                    <h2><i class="fas fa-check-circle" style="color: #10b981;"></i> Terhubung!</h2>
+                    <p class="subtitle">Host sedang mengontrol kamera Anda</p>
+                    
+                    <div class="room-code room-code-small" id="connectedRoomCode">------</div>
+                    
+                    <div class="status success">
+                        <i class="fas fa-wifi"></i>
+                        <span>Terkoneksi ke host. Kamera sedang dikontrol.</span>
                     </div>
                 </div>
                 
-                <p class="instructions">Host sedang mengontrol kamera Anda. Anda tidak dapat mengubah pengaturan kamera secara manual.</p>
+                <!-- Local Camera Preview -->
+                <div class="video-container mt-20">
+                    <video id="cameraFeed" class="video-feed" autoplay playsinline></video>
+                    <div class="video-overlay">
+                        <div class="video-label">
+                            <i class="fas fa-user"></i>
+                            <span>Kamera Anda</span>
+                        </div>
+                        <div class="video-label">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <span id="streamingStatus">Streaming aktif</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Status Indicators -->
+                <div class="controls mt-20">
+                    <div class="control-group">
+                        <h3><i class="fas fa-lightbulb"></i> Senter</h3>
+                        <div class="status" id="flashStatus">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Mati</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h3><i class="fas fa-search"></i> Zoom</h3>
+                        <div class="status" id="zoomStatus">
+                            <i class="fas fa-search"></i>
+                            <span>1.0x</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h3><i class="fas fa-camera"></i> Status</h3>
+                        <div class="status info" id="cameraStatus">
+                            <i class="fas fa-video"></i>
+                            <span>Aktif</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Local Controls -->
+                <div class="slider-container mt-20">
+                    <div class="flex-between">
+                        <h3><i class="fas fa-sliders-h"></i> Local Controls</h3>
+                        <small style="color: var(--gray);">*Hanya untuk preview</small>
+                    </div>
+                    <div class="slider-group">
+                        <span class="slider-value">1.0x</span>
+                        <input type="range" id="localZoomSlider" class="slider" min="1" max="5" step="0.1" value="1" disabled>
+                        <span class="slider-value">5.0x</span>
+                    </div>
+                    
+                    <div class="flex-center gap-10 mt-20">
+                        <button id="localFlashBtn" class="btn btn-sm" disabled>
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Senter Lokal</span>
+                        </button>
+                        <button id="toggleLocalCameraBtn" class="btn btn-sm btn-outline">
+                            <i class="fas fa-video-slash"></i>
+                            <span>Matikan Kamera</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="instructions mt-20">
+                    <h3><i class="fas fa-info-circle"></i> Informasi Client</h3>
+                    <ul>
+                        <li>Host dapat mengontrol semua fungsi kamera Anda</li>
+                        <li>Indikator akan menunjukkan status terkini</li>
+                        <li>Anda dapat mematikan kamera kapan saja</li>
+                        <li>Screenshot akan disimpan di device Anda</li>
+                        <li>Koneksi aman hanya antara Anda dan host</li>
+                    </ul>
+                </div>
+                
+                <!-- Leave Room -->
+                <div class="text-center mt-20">
+                    <button id="leaveRoomBtn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Keluar dari Room
+                    </button>
+                </div>
             </div>
-            
-            <div class="instructions">
-                <h3>Instruksi Client:</h3>
-                <ul>
-                    <li>Masukkan kode room yang diberikan oleh host</li>
-                    <li>Izinkan akses kamera saat diminta</li>
-                    <li>Host akan dapat mengontrol kamera Anda (zoom, senter, dll)</li>
-                    <li>Anda tidak perlu melakukan apa-apa setelah terhubung</li>
-                </ul>
+        </div>
+    </div>
+    
+    <!-- Permission Modal -->
+    <div id="permissionModal" class="permission-request hidden">
+        <div class="permission-modal">
+            <div class="permission-icon">
+                <i class="fas fa-camera fa-3x"></i>
             </div>
-            
-            <a href="/" class="btn btn-danger">
-                <i class="fas fa-home"></i> Kembali ke Menu Utama
-            </a>
+            <h2>Izin Kamera Diperlukan</h2>
+            <p class="permission-text">
+                Untuk bergabung dengan room, Anda perlu memberikan izin akses kamera.
+                Host akan dapat mengontrol kamera Anda.
+            </p>
+            <div class="permission-buttons">
+                <button id="grantPermissionBtn" class="btn">
+                    <i class="fas fa-check"></i> Berikan Izin
+                </button>
+                <button id="denyPermissionBtn" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Tolak
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Connection Status Indicator -->
+    <div id="globalStatus" class="connection-status hidden">
+        <i class="fas fa-circle"></i>
+        <span>Status</span>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+    
+    <!-- QR Scanner Modal -->
+    <div id="qrScannerModal" class="permission-request hidden">
+        <div class="permission-modal">
+            <div class="permission-icon">
+                <i class="fas fa-qrcode fa-3x"></i>
+            </div>
+            <h2>Scan QR Code</h2>
+            <p class="permission-text">Arahkan kamera ke QR code yang diberikan host</p>
+            <div id="qrScannerContainer" style="width: 100%; height: 300px; background: #000; border-radius: 12px; margin: 20px 0;"></div>
+            <div class="permission-buttons">
+                <button id="closeQRScannerBtn" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Tutup Scanner
+                </button>
+            </div>
         </div>
     </div>
     
     <script src="/socket.io/socket.io.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="client.js"></script>
 </body>
-</html>
+                    </html>
