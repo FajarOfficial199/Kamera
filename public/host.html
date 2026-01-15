@@ -3,76 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Host - Camera Controller</title>
+    <title>Host - Camera Controller Pro</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1><i class="fas fa-video"></i> Host Camera Controller</h1>
+            <div class="flex-between">
+                <div>
+                    <h1><i class="fas fa-crown"></i> Host Controller</h1>
+                    <p class="subtitle">Buat room dan kendalikan kamera client</p>
+                </div>
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Beranda
+                </a>
+            </div>
             
-            <div id="createRoomSection">
-                <p>Klik tombol di bawah untuk membuat room baru</p>
+            <!-- Step 1: Create Room -->
+            <div id="createRoomSection" class="text-center">
+                <div class="permission-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h2>Buat Room Baru</h2>
+                <p class="permission-text">Anda akan menjadi host yang dapat mengontrol kamera client</p>
                 <button id="createRoomBtn" class="btn">
-                    <i class="fas fa-plus-circle"></i> Buat Room Baru
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Buat Room</span>
                 </button>
             </div>
             
+            <!-- Step 2: Room Created -->
             <div id="roomCreatedSection" class="hidden">
-                <h2>Room Berhasil Dibuat!</h2>
-                <p>Bagikan kode ini ke client:</p>
-                <div class="room-code" id="roomCodeDisplay">ABCDEF</div>
-                
-                <div class="status" id="connectionStatus">
-                    Menunggu koneksi client...
-                </div>
-                
-                <div class="clients-list">
-                    <h3>Client Terhubung:</h3>
-                    <div id="clientsContainer"></div>
-                </div>
-                
-                <div id="controlsSection" class="hidden">
-                    <div class="video-container">
-                        <img id="videoFeed" src="" alt="Video Feed from Client">
-                    </div>
+                <div class="text-center">
+                    <h2><i class="fas fa-check-circle" style="color: #10b981;"></i> Room Berhasil Dibuat!</h2>
+                    <p class="subtitle">Bagikan kode ini ke client yang ingin Anda kendalikan kameranya</p>
                     
-                    <div class="controls">
-                        <button id="toggleCameraBtn" class="control-btn">
-                            <i class="fas fa-video"></i> Hidupkan Kamera
+                    <div class="room-code" id="roomCodeDisplay">------</div>
+                    
+                    <div class="flex-center gap-10 mb-20">
+                        <button id="copyCodeBtn" class="btn btn-sm">
+                            <i class="fas fa-copy"></i> Salin Kode
                         </button>
-                        
-                        <button id="flashlightBtn" class="control-btn">
-                            <i class="fas fa-lightbulb"></i> Senter: MATI
+                        <button id="shareCodeBtn" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-share-alt"></i> Bagikan
                         </button>
-                        
-                        <div class="zoom-slider">
-                            <label for="zoomSlider"><i class="fas fa-search"></i> Zoom: <span id="zoomValue">1x</span></label>
-                            <input type="range" id="zoomSlider" min="1" max="5" step="0.1" value="1">
+                    </div>
+                </div>
+                
+                <!-- Connection Status -->
+                <div class="status info" id="connectionStatus">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Menunggu koneksi client...</span>
+                </div>
+                
+                <!-- Clients List -->
+                <div id="clientsSection" class="hidden">
+                    <div class="clients-container">
+                        <div class="clients-header">
+                            <h3><i class="fas fa-users"></i> Client Terhubung</h3>
+                            <span class="client-count" id="clientCount">0 client</span>
+                        </div>
+                        <div id="clientsList" class="client-list">
+                            <!-- Clients will appear here -->
                         </div>
                     </div>
                 </div>
+                
+                <!-- Controls -->
+                <div id="controlsSection" class="hidden">
+                    <div class="video-container">
+                        <img id="videoFeed" class="video-feed" src="" alt="Video Feed from Client">
+                        <div class="video-overlay">
+                            <div class="video-label">
+                                <i class="fas fa-video"></i>
+                                <span id="currentClientName">Client 1</span>
+                            </div>
+                            <div class="video-label">
+                                <i class="fas fa-wifi"></i>
+                                <span id="streamStatus">Streaming aktif</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <!-- Camera Controls -->
+                        <div class="control-group">
+                            <h3><i class="fas fa-video"></i> Kamera</h3>
+                            <button id="toggleCameraBtn" class="control-btn">
+                                <i class="fas fa-video"></i>
+                                <span>Hidupkan Kamera</span>
+                            </button>
+                            <button id="switchCameraBtn" class="control-btn btn-outline mt-20">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Ganti Kamera</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Flash Controls -->
+                        <div class="control-group">
+                            <h3><i class="fas fa-lightbulb"></i> Senter</h3>
+                            <button id="flashlightBtn" class="control-btn">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Nyalakan Senter</span>
+                            </button>
+                            <p class="permission-text" style="font-size: 0.9rem; margin-top: 10px;">
+                                *Hanya berfungsi jika device mendukung
+                            </p>
+                        </div>
+                        
+                        <!-- Screenshot Controls -->
+                        <div class="control-group">
+                            <h3><i class="fas fa-camera-retro"></i> Screenshot</h3>
+                            <button id="screenshotBtn" class="control-btn">
+                                <i class="fas fa-camera"></i>
+                                <span>Ambil Screenshot</span>
+                            </button>
+                            <div id="screenshotPreview" class="hidden">
+                                <!-- Screenshot will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Zoom Control -->
+                    <div class="slider-container mt-20">
+                        <h3><i class="fas fa-search"></i> Zoom Control</h3>
+                        <p class="subtitle" style="margin-bottom: 15px;">Atur level zoom kamera client</p>
+                        <div class="slider-group">
+                            <span class="slider-value" id="zoomValue">1.0x</span>
+                            <input type="range" id="zoomSlider" class="slider" min="1" max="5" step="0.1" value="1">
+                            <span class="slider-value">5.0x</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="instructions mt-20">
+                    <h3><i class="fas fa-graduation-cap"></i> Panduan Host</h3>
+                    <ul>
+                        <li>Client akan muncul di daftar setelah terhubung</li>
+                        <li>Klik pada client untuk mengontrol kameranya</li>
+                        <li>Gunakan slider untuk mengatur zoom (1x - 5x)</li>
+                        <li>Screenshot akan disimpan di device client</li>
+                        <li>Flash hanya bekerja jika device client mendukung</li>
+                    </ul>
+                </div>
+                
+                <!-- Leave Room -->
+                <div class="text-center mt-20">
+                    <button id="leaveRoomBtn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Tutup Room
+                    </button>
+                </div>
             </div>
-            
-            <div class="instructions">
-                <h3>Instruksi Host:</h3>
-                <ul>
-                    <li>Bagikan kode room ke client yang ingin Anda kendalikan kameranya</li>
-                    <li>Tunggu hingga client terhubung</li>
-                    <li>Setelah client terhubung, Anda dapat mengontrol kamera mereka</li>
-                    <li>Gunakan slider untuk zoom in/out</li>
-                    <li>Tombol senter untuk menyalakan lampu flash</li>
-                </ul>
+        </div>
+    </div>
+    
+    <!-- Connection Status Indicator -->
+    <div id="globalStatus" class="connection-status hidden">
+        <i class="fas fa-circle"></i>
+        <span>Status</span>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+    
+    <!-- Screenshot Preview Modal -->
+    <div id="screenshotModal" class="screenshot-preview hidden">
+        <div class="screenshot-content">
+            <img id="screenshotImage" src="" alt="Screenshot">
+            <div class="screenshot-controls">
+                <button id="downloadScreenshotBtn" class="btn btn-sm">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button id="closeScreenshotBtn" class="btn btn-sm btn-outline">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
             </div>
-            
-            <a href="/" class="btn btn-danger">
-                <i class="fas fa-home"></i> Kembali ke Menu Utama
-            </a>
         </div>
     </div>
     
     <script src="/socket.io/socket.io.js"></script>
-    <script src="script.js"></script>
+    <script src="host.js"></script>
 </body>
-</html>
+                                </html>
